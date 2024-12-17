@@ -24,6 +24,18 @@ def build_regex(parts):
     return re.compile(anchored)
 
 
+def no_repeat_match(word, regex):
+    m = regex.match(word)
+    if not m:
+        return False
+    groups = m.groups()
+    groups = sorted(groups)
+    for p1, p2 in zip(groups, groups[1:]):
+        if p1 == p2:
+            return False
+    return True
+
+
 def extract_matches(words, parts):
     reduced_words = [
         w
@@ -34,7 +46,7 @@ def extract_matches(words, parts):
         )
     ]
     regex = build_regex(parts)
-    matching_words = [w for w in reduced_words if regex.match(w)]
+    matching_words = [w for w in reduced_words if no_repeat_match(w, regex)]
     return matching_words
 
 
