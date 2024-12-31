@@ -19,7 +19,8 @@ def print_words(words):
 
 def build_regex(parts):
     alt = "|".join(parts)
-    up_to_4 = "(" + alt + "){1,4}"
+    one_group = "(" + alt + ")?"
+    up_to_4 = one_group * 4
     anchored = "^" + up_to_4 + "$"
     return re.compile(anchored)
 
@@ -29,6 +30,7 @@ def no_repeat_match(word, regex):
     if not m:
         return False
     groups = m.groups()
+    groups = filter(None, groups)
     groups = sorted(groups)
     for p1, p2 in zip(groups, groups[1:]):
         if p1 == p2:
